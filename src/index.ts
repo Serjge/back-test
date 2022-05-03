@@ -1,27 +1,16 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import express, { Express, Request, Response } from 'express'
+import { Path } from './enum';
+import dotenv from 'dotenv'
+import cors from 'cors';
+import { urlencoded, json } from 'body-parser'
 
-import { Method, Path } from './enum';
-import { addUser, getUsers } from './repository';
+import { usersRoutes } from './routes'
 
-require('dotenv').config()
-const http = require('http')
+const app: Express = express();
+
+dotenv.config()
 
 const PORT = process.env.PORT
-
-const server = http.createServer()
-
-const cors = (request: IncomingMessage, response: ServerResponse) => {
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Request-Method', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-  response.setHeader('Access-Control-Allow-Headers', '*');
-  if (request.method === 'OPTIONS') {
-    response.writeHead(200);
-    response.end();
-    return true;
-  }
-  return false
-}
 
 
 const posts = [
@@ -38,50 +27,25 @@ const hello = [
   },
 ];
 
+app.use(cors())
+app.use(urlencoded({ extended: true }))
+app.use(json())
 
-server.on('request', (request: IncomingMessage, response: ServerResponse) => {
+app.use(Path.Users, usersRoutes)
 
-  if (cors(request, response)) {
-    return
-  }
+app.get(Path.Root, (req: Request, res: Response) => {
+  res.send(JSON.stringify(hello))
+})
 
-  switch (request.url) {
-    case Path.Root: {
-      if (request.method === Method.Get) {
-        response.write(JSON.stringify(hello));
-      }
-      break;
-    }
+app.get(Path.Posts, (req: Request, res: Response) => {
+  res.send(posts);
+})
 
-    case Path.Posts: {
-      if (request.method === Method.Get) {
-        response.write(JSON.stringify(posts));
-      }
-      break;
-    }
+app.use((req: Request, res: Response) => {
+  res.sendStatus(404)
+})
 
-    case Path.Users: {
-      if (request.method === Method.Post) {
-        addUser('anna')
-        response.write(JSON.stringify({ success: true }));
-      } else {
-        response.write(JSON.stringify(getUsers()));
-      }
-      break;
-    }
-    default: {
-      response.statusCode = 404;
-      response.write('Page Not Fount');
-    }
-  }
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${ PORT }`)
+})
 
-  response.end()
-});
-
-server.listen(PORT, (error: string) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log(`Server listening on port ${ PORT }`);
-  }
-});

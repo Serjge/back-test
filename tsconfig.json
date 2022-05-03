@@ -3,12 +3,13 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "./dist",
-
-    "rootDir": "./src",
-    "paths": {
-      "*": ["/node_modules/*"]
-    },
     "baseUrl": ".",
+    "resolveJsonModule": true,
+    "paths": {
+      "*": [
+        "/node_modules/*"
+      ]
+    },
     "strict": true,
     "skipDefaultLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -18,7 +19,7 @@
   "include": [
     "src"
   ],
-  "exclude":[
+  "exclude": [
     "./node_modules"
   ]
 }
