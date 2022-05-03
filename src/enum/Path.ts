@@ -1,4 +1,5 @@
 export enum Path  {
   Root = '/',
-  Posts = '/posts'
+  Posts = '/posts',
+  Users = '/users',
 }
