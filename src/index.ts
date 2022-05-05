@@ -3,14 +3,23 @@ import { Path } from './enum';
 import dotenv from 'dotenv'
 import cors from 'cors';
 import { urlencoded, json } from 'body-parser'
+import { connect } from 'mongoose'
+
+dotenv.config()
+
+const PORT = process.env.PORT
+const MONGO_DB = process.env.MONGO_DB
+
+main().catch(err => console.log(err));
+
+async function main() {
+  await connect('mongodb://' + MONGO_DB + 'myUsers');
+}
 
 import { usersRoutes } from './routes'
 
 const app: Express = express();
 
-dotenv.config()
-
-const PORT = process.env.PORT
 
 
 const posts = [

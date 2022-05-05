@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
-import { Path } from './../enum';
-import { addUser, getUsers } from './../repository';
+import { Path } from 'src/enum';
+import { addUser, deleteUser, getUser, getUsers, renameUser } from 'src/repository';
 
 export const usersRoutes = Router();
 
@@ -14,10 +14,13 @@ usersRoutes.get(Path.Root, async (req: Request, res: Response) => {
   res.send(users)
 })
 
+type GetBodyType = {
+  userId: string,
+}
+
 usersRoutes.get(Path.UserId, async (req: Request, res: Response) => {
-  const userId = Number(req.params.userId)
-  const users = await getUsers()
-  const user = users.find(({ id }) => userId === id)
+  const { userId } = req.params as GetBodyType
+  const user = await getUser(userId)
 
   if (user) {
     res.send(user)
@@ -26,11 +29,34 @@ usersRoutes.get(Path.UserId, async (req: Request, res: Response) => {
   }
 })
 
+type PostBodyType = {
+  name: string
+}
+
 usersRoutes.post(Path.Root, async (req: Request, res: Response) => {
-  console.log(req.body.name)
-  await addUser(req.body.name)
+  const { name } = req.body as PostBodyType
+  await addUser(name)
   res.send({ success: true })
 })
 
+type DeleteBodyType = {
+  userId: string
+}
 
+usersRoutes.delete('', async (req: Request, res: Response) => {
+  const { userId } = req.query as DeleteBodyType
+  await deleteUser(userId)
+  res.send({ success: true })
+})
+
+type PutBodyType = {
+  name: string,
+  id: string,
+}
+
+usersRoutes.put(Path.Root, async (req: Request, res: Response) => {
+  const { name, id } = req.body as PutBodyType
+  await renameUser(id, name)
+  res.send({ success: true })
+})
 

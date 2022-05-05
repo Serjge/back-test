@@ -6,9 +6,7 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     "paths": {
-      "*": [
-        "/node_modules/*"
-      ]
+      "src/*": ["src/*"],
     },
     "strict": true,
     "skipDefaultLibCheck": true,
