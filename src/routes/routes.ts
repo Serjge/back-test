@@ -56,7 +56,14 @@ type PutBodyType = {
 
 usersRoutes.put(Path.Root, async (req: Request, res: Response) => {
   const { name, id } = req.body as PutBodyType
-  await renameUser(id, name)
-  res.send({ success: true })
+
+  try {
+    await renameUser(id, name)
+    res.status(200).send({ success: true })
+  } catch (error) {
+    const {message} = error as Error
+    res.status(500).send({ error: message })
+
+  }
 })
 
