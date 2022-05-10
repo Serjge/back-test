@@ -11,13 +11,18 @@ const userSchema = new Schema<UserType>({
   name: { type: String, required: true },
   userId: { type: Schema.Types.ObjectId },
   creatData: Date,
-  secondName: String
+  secondName: String,
 });
 const Users = model<UserType>('MyUsers', userSchema);
 
 export const getUsers = async (): Promise<UserType[]> => {
-  const users  = await Users.find()
-  return  users.map(({ userId, name, secondName, creatData }) => ( { userId, name, creatData, secondName } ))
+  const users = await Users.find()
+  return users.map(({ userId, name, secondName, creatData }) => ( {
+    userId,
+    name,
+    creatData,
+    secondName,
+  } ))
 }
 
 export const getUser = async (id: string): Promise<UserType | null> => {
@@ -25,9 +30,10 @@ export const getUser = async (id: string): Promise<UserType | null> => {
   return Users.findById(UserId)
 }
 
-export const getBaseUserId = async (userId:string): Promise<Types.ObjectId> => {
-  const user = await Users.findOne({ userId})
-  if(user)  {
+
+export const getBaseUserId = async (userId: string): Promise<Types.ObjectId> => {
+  const user = await Users.findOne({ userId })
+  if (user) {
     return user._id
   }
   throw new Error('user not found')
@@ -44,11 +50,11 @@ export const addUser = async (name: string): Promise<UserType> => {
   return Users.create({ name, userId, creatData })
 }
 
-export const renameUser = async (id: string, name: string): Promise<null | Error>  => {
+export const renameUser = async (id: string, name: string): Promise<null | Error> => {
 
   const userId = await getBaseUserId(id)
-    if(userId) {
+  if (userId) {
     return Users.findByIdAndUpdate(userId, { name })
-    }
-    throw new Error('user not found')
+  }
+  throw new Error('user not found')
 }

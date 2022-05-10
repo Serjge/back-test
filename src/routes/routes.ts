@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
-import { Path } from 'src/enum';
-import { addUser, deleteUser, getUser, getUsers, renameUser } from 'src/repository';
+import { Path } from '../enum';
+import { addUser, deleteUser, getUser, getUsers, renameUser } from '../repository';
 
 export const usersRoutes = Router();
 
@@ -24,8 +24,10 @@ usersRoutes.get(Path.UserId, async (req: Request, res: Response) => {
 
   if (user) {
     res.send(user)
+    console.log('users ok')
   } else {
     res.sendStatus(404)
+    console.log('users error')
   }
 })
 
