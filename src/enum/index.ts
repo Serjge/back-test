@@ -1,2 +1,2 @@
-export {Path} from './Path'
-export {Method} from './Metod'
+export {Path} from "./Path";
+export {Method} from "./Metod";

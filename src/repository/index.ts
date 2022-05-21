@@ -1,1 +1,1 @@
-export {getUsers, addUser, deleteUser, getUser, renameUser} from './repository'
+export {getUsers, addUser, deleteUser, getUser, renameUser} from "./repository";
